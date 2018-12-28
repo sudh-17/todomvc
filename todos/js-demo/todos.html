@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../index.css">
+    </head>
+    <body>
+        <div id="app">
+            <div class="header">
+                <h1>todos</h1>
+                <input type="text" id="input" placeholder="What needs to be done ">
+            </div>
+            <div class="main">
+                <input type="checkbox" name="checks" id="btnCheck">
+                <ul id="list">
+                    
+                </ul>
+            </div>
+            <div class="footer">
+                <span style="float:left"><strong id="itemLeft">0</strong> item left</span>
+                <ul>
+                    <li>
+                        <button class="btn selected" name="btnGp" id="btnAll">all</button>
+                    </li>
+                    <li>
+                        <button class="btn" name="btnGp" id="btnActive">active</button>
+                    </li>
+                    <li>
+                        <button class="btn" name="btnGp" id="btnCompleted">completed</button>
+                    </li>
+                    <li>
+                        <button class="btn" id="btnClear">clear completed</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <script>
+            /*//定义一个add 方法
+            function add(x, y) {
+                return x == y;
+            }
+
+            //用call 来调用 add 方法
+            function myAddCall(x, y) {
+                //调用 add 方法 的 call 方法
+                return add.call(this, x, y);
+            }
+
+            var a = {id:1};
+            var b = {id:1};
+            console.log(myAddCall(a,b))*/
+        </script>
+        <script src="./jquery-2.2.4.min.js"></script>
+        <script src="./store.js"></script>
+        <script src="./controller.js"></script>
+        <script src="./app.js"></script>
+
+    </body>
+</html>
