@@ -31,11 +31,11 @@ body {
     border-bottom: 1px solid #ddd;
     position: relative;
     box-shadow: inset 0 -3px 1px rgba(0,0,0,0.03);
-    height: 56px;
+
 }
 .header h1 {
     position: absolute;
-    bottom: -24px;
+    bottom: -16px;
     text-align: center;
     width: 100%;
     font-size: 100px;
@@ -43,11 +43,17 @@ body {
     font-weight: normal;
 }
 .header input {
-    height: 11px;
-    width: 435px;
-    padding: 20px 10px 20px 60px;
+    width: 100%;
+    padding: 20px 10px 20px 56px;
     border: none;
     font-size: 21px;
+    box-sizing: border-box;
+    box-shadow: none;
+}
+.header input::placeholder {
+    font-style: italic;
+    font-weight: 300;
+    color: #e6e6e6;
 }
 #list {
     list-style: none;
@@ -106,7 +112,7 @@ body {
     padding-left: 49px;
     padding-right: 36px;
 }
-#list .view .done{
+#list .view .done { 
     color: #AB7E7E;
     text-decoration: line-through;
 }
