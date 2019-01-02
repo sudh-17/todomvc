@@ -3,19 +3,16 @@ function Controller(){
 }
 
 Controller.prototype = {
-    add: function(name){
-        if(name == null){
-            return;
+    add: function(newItem){
+        if(newItem == null){
+            return false;
         }
-        var newItem = {
-            id: new Date().getTime(),
-            name: name,
-            completed: false
-        };
+
         this.store.add(newItem);
+        return true;
     },
     remove: function(id){
-        this.store.remove(id,function(a,b){
+        return this.store.remove(id,function(a,b){
             return a == b.id;
         });
     },

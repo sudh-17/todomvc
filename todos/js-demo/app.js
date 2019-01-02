@@ -1,7 +1,4 @@
 (function(){
-    var input = document.getElementById('input');
-    var btnClear = document.getElementById('btnClear');
-    var btnCheck = document.getElementById('btnCheck');
 
     var ctl = new Controller();
 
@@ -24,6 +21,7 @@
         }     
         //append list
         var todos = ctl.get();
+
         if(completed == null){
             for(var i =0 ;i< todos.length; i++){
                 var item = todos[i];
@@ -39,41 +37,62 @@
             }
         }
 
-        //item left
+        itemLeft();
+        tools();
+        isCheckAll();
+    }
+
+    //item left
+    function itemLeft(){
         var left = ctl.itemLeft();
         document.getElementById('itemLeft').innerText = left;
+    }
 
-        //display footer
-        if(todos == null || todos.length == 0 ){
+    function tools(){
+        var list = ctl.get();
+        if(list.length == 0){
+            document.getElementById('btnCheck').style.display = 'none';
+            document.getElementById('btnCheck').checked = false;
             document.getElementsByClassName('footer')[0].style.display = 'none';
         }
         else{
+            document.getElementById('btnCheck').style.display = 'block';
             document.getElementsByClassName('footer')[0].style.display = 'block';
         }
+    }
+
+    function isCheckAll(){
+        var items = document.getElementsByName('items');
+        var checkAll = false;
+        if(items.length > 0){
+            checkAll = true;
+            for(var i = 0 ;i< items.length;i++){
+                if(items[i].checked == false){
+                    checkAll =  false;
+                    break;
+                }
+            }
+        }
+        document.getElementById('btnCheck').checked = checkAll;
     }
 
     function appendTodo(todo){
 
         var li=document.createElement("li");
         li.setAttribute('data-id',todo.id);
+        li.setAttribute('data-stat',todo.completed ? 'done':'none');
+        //li.className = todo.completed ? 'done':'none';
         var view = document.createElement("div");
         view.setAttribute('class','view');
         var chk = document.createElement('input');
         chk.setAttribute('type','checkbox');
         chk.name = 'items';
         chk.checked = todo.completed;
-        chk.onclick = function(){
-            //勾选事件
-            todo.completed = this.checked;
-            ctl.update(todo);
-            initTodos();
-        };
+        
         var btn = document.createElement('button');
         btn.setAttribute('class','del');
         btn.innerHTML = '×';
-        btn.onclick = function(){
-            del(todo.id);
-        };
+        
         var label = document.createElement('label');
         label.innerHTML = todo.name;
         label.className = todo.completed ? 'done':'';
@@ -81,24 +100,42 @@
         view.appendChild(label);
         view.appendChild(btn);
         li.appendChild(view);
-        li.ondblclick = function(){
+        
+        label.ondblclick = function(){
             var edt = document.createElement('input');
             edt.className = 'edit';
             edt.value = todo.name;
-            this.appendChild(edt);
+            var parent = label.parentElement.parentElement;
+            parent.appendChild(edt);
             edt.focus();/**获得焦点 */
             edt.onblur = function(){
                 todo.name = edt.value;
                 ctl.update(todo);
-                initTodos();
+                label.innerText = edt.value;
+                parent.removeChild(edt);
             };
             edt.onkeydown = function(e){
                 if(e.keyCode == 13){
                     todo.name = edt.value;
                     ctl.update(todo);
-                    initTodos();
+                    label.innerText = edt.value;
+                    parent.removeChild(edt);
                 }
             }
+        };
+
+        btn.onclick = function(){
+            del(todo.id);
+        };
+
+        chk.onclick = function(){
+            //勾选事件
+            todo.completed = this.checked;
+            ctl.update(todo);
+            label.className = this.checked ? 'done':'';
+            itemLeft();
+            isCheckAll();
+            
         };
         
         var list = document.getElementById('list');
@@ -107,48 +144,109 @@
 
     //** 删除**/
     function del(id){
-        ctl.remove(id);
-        initTodos();
+        var res = ctl.remove(id);
+        console.log(res)
+        if(res == true){
+            var li = document.getElementsByTagName('li');
+            for(var i = 0;i<li.length;i++){
+                if(li[i].getAttribute('data-id') == id){
+                    document.getElementById('list').removeChild(li[i]);
+                    break;
+                }
+            }
+            itemLeft();
+            tools();
+            isCheckAll();
+        }
+    }
+
+    
+
+    /**add action */
+    function addAction(){
+        var input = document.getElementById('input');
+        input.onkeydown = function(e){
+            if(e.keyCode == 13){
+                
+                var val = this.value;
+                if(val.trim() == ''){
+                    return ;
+                }
+                var newItem = {
+                    id: new Date().getTime(),
+                    name: val,
+                    completed: false
+                };
+                var res = ctl.add(newItem);
+                if(res){
+                    this.value = '';
+                    appendTodo(newItem);
+                    itemLeft();
+                    tools();
+                    isCheckAll();
+                }
+            }
+        }
+    }
+
+    /**clear action*/
+    function clearAction(){
+        var btnClear = document.getElementById('btnClear');
+        btnClear.onclick = function(e){
+            ctl.clearCompleted();
+            var list = document.getElementById('list');
+            var nodes = list.childNodes;
+            var done = [];
+            for(var i = 0; i< nodes.length; i++){
+                if(nodes[i].getAttribute('data-stat') == 'done'){
+                    done.push(nodes[i]);
+                }
+            }
+            for(var i=0;i<done.length;i++){
+                list.removeChild(done[i])
+            }
+            isCheckAll();
+        }
+    }
+
+    /**all, active, completed action*/
+    function btnGpAction(){
+        var btnGp = document.getElementsByName('btnGp');
+        for(var i = 0;i< btnGp.length;i++){
+            btnGp[i].onclick = function(){
+                for(var i= 0;i < btnGp.length;i++){
+                    btnGp[i].className = 'btn';
+                }
+                this.className = 'btn selected';
+                initTodos();
+                isCheckAll();
+            }
+        }
+    }
+
+    /**checkAll action*/
+    function checkAllAction(){
+        document.getElementById('btnCheck').onclick = function(){
+            var completed = this.checked;
+            ctl.checkedAll(completed);
+            var list = document.getElementById('list');
+            var nodes = list.childNodes;
+            for(var i = 0; i<nodes.length; i++){
+                var view = nodes[i].getElementsByClassName('view')[0];
+                view.getElementsByTagName('input')[0].checked = completed;
+                view.getElementsByTagName('label')[0].className = completed ? 'done':'';
+            }
+        }
     }
 
     /** 初始化**/
     initTodos();
 
-    /**新增 */
-    input.onkeydown = function(e){
-        if(e.keyCode == 13){
-            
-            var val = this.value;
-            if(val.trim() == ''){
-                return ;
-            }
-            ctl.add(val);
-            initTodos();//重新加载todos
-            this.value = '';
-        }
-    }
+    addAction();
 
-    /**clear */
-    btnClear.onclick = function(e){
-        ctl.clearCompleted();
-        initTodos();
-    }
+    clearAction();
 
-    /**按钮组事件 */
-    var btnGp = document.getElementsByName('btnGp');
-    for(var i = 0;i< btnGp.length;i++){
-        btnGp[i].onclick = function(){
-            for(var i= 0;i < btnGp.length;i++){
-                btnGp[i].className = 'btn';
-            }
-            this.className = 'btn selected';
-            initTodos();
-        }
-    }
+    btnGpAction();
 
-    /**全选与反选 */
-    btnCheck.onclick = function(){
-        ctl.checkedAll(this.checked);
-        initTodos();
-    }
+    checkAllAction();
 }())

@@ -23,12 +23,15 @@ Store.prototype = {
     },
     remove: function(id,equals){
         var list = JSON.parse(localStorage.getItem(this.name));
+        var res = false;
         for(var i = 0; i< list.length; i++){
             if(equals.call(this,id,list[i])){
                 list.splice(i,1);
+                res = true;
             }
         }
         localStorage.setItem(this.name,JSON.stringify(list));
+        return res;
     },
     destroy: function(){
         localStorage.setItem(this.name,JSON.stringify([]));
