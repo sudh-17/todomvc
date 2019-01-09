@@ -1,14 +1,48 @@
-function Store(name){
-    this.name = name;
-    init(name);
-}
-function init(name){
-    var local = localStorage.getItem(name);
-    if(local == null){
-        localStorage.setItem(name,JSON.stringify([]));
+/**
+ * author sdh
+ * 数据层
+ */
+(function(window){
+    function Store(name){
+        this._dbName = name;
+        var local = localStorage.getItem(name);
+        if(local == null){
+            localStorage.setItem(name,JSON.stringify([]));
+        }
+        
+        let todos = JSON.parse(localStorage.getItem(this._dbName));
+        todos.push({id: '1', title: 'JJ',completed: false});
+        todos.push({id: '2', title: 'DD',completed: false});
+        todos.push({id: '3', title: 'FF',completed: false});
+        localStorage.setItem(this._dbName,todos);
+
     }
-}
+    
+    Store.prototype.save = function(){
+        
+    }
+
+    Store.prototype.findAll = function(callback){
+        callback = callback || function () {};
+        console.log('local');
+        console.log(JSON.parse(localStorage.getItem(this._dbName)))
+		callback.call(this, JSON.parse(localStorage.getItem(this._dbName)));
+    }
+
+    window.app = window.app || {};
+    window.app.Store = Store;
+}(window))
+
+
+/*
 Store.prototype = {
+    save: function(updateData,callback,id){
+
+    },
+    findAll: function(callback){
+        callback = callback || function () {};
+		callback.call(this, JSON.parse(localStorage.getItem(this._dbName)));
+    },
     get: function(){
         var list = JSON.parse(localStorage.getItem(this.name));
         return list;
@@ -39,9 +73,5 @@ Store.prototype = {
     toString: function(){
         var list = JSON.parse(localStorage.getItem(this.name));
         console.log(list)
-    }
-    
-    
-    
-    
-}
+    }   
+}*/

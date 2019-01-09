@@ -22,3 +22,7 @@
 6. 对所有的记录内容的展示进行过滤，过滤条件分别为全部，状态为completed=false，状态为completed=true这三个状态。
 7. 当存在completed=true的记录时，显示“clear completed”按钮，它可以一键清理掉completed=true的记录，
 8. 在HTML5中，新加入了一个localStorage特性，这个特性主要是用来作为本地存储来使用的，解决了cookie存储空间不足的问题(cookie中每条cookie的存储空间为4k)，localStorage中一般浏览器支持的是5M大小，这个在不同的浏览器中localStorage会有所不同。
+
+附加内容. 加载动画，输入框自动对焦，HTML标签过滤，锚点，编辑取消，编辑时内容为空则删
+
+功能模块，流程模块弄清楚程序

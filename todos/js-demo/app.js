@@ -1,10 +1,23 @@
 (function(){
 
-    var ctl = new Controller();
+    function Todo(mame){
+		this.model = new app.Model(name);
+		this.view = new app.View();
+		this.controller = new app.Controller(this.model, this.view);
+    }
+
+    var todo = new Todo('todos1');
+    todo.controller.showAll();
+    //todo.controller.addItem({id: '4',title: 'new title',completed: false});
+    todo.controller.bind();
+    //todo.controller.showCompleted();
+   //todo.controller.showActive();
+
+    /*var ctl = new Controller();
 
     function initTodos(){
         var list = document.getElementById('list');
-        list.innerHTML = '';//**清空 */
+        list.innerHTML = '';//**清空 
         var completed = null;
         var btnGp = document.getElementsByName('btnGp');
         for(var i= 0;i < btnGp.length;i++){
@@ -107,7 +120,7 @@
             edt.value = todo.name;
             var parent = label.parentElement.parentElement;
             parent.appendChild(edt);
-            edt.focus();/**获得焦点 */
+            edt.focus();/**获得焦点 
             edt.onblur = function(){
                 todo.name = edt.value;
                 ctl.update(todo);
@@ -142,7 +155,7 @@
         list.appendChild(li);
     }
 
-    //** 删除**/
+    //** 删除*
     function del(id){
         var res = ctl.remove(id);
         console.log(res)
@@ -162,7 +175,7 @@
 
     
 
-    /**add action */
+    /**add action 
     function addAction(){
         var input = document.getElementById('input');
         input.onkeydown = function(e){
@@ -189,7 +202,7 @@
         }
     }
 
-    /**clear action*/
+    /**clear action
     function clearAction(){
         var btnClear = document.getElementById('btnClear');
         btnClear.onclick = function(e){
@@ -209,7 +222,7 @@
         }
     }
 
-    /**all, active, completed action*/
+    /**all, active, completed action
     function btnGpAction(){
         var btnGp = document.getElementsByName('btnGp');
         for(var i = 0;i< btnGp.length;i++){
@@ -224,7 +237,7 @@
         }
     }
 
-    /**checkAll action*/
+    /**checkAll action
     function checkAllAction(){
         document.getElementById('btnCheck').onclick = function(){
             var completed = this.checked;
@@ -239,7 +252,7 @@
         }
     }
 
-    /** 初始化**/
+    /** 初始化*
     initTodos();
 
     addAction();
@@ -248,5 +261,5 @@
 
     btnGpAction();
 
-    checkAllAction();
+    checkAllAction();*/
 }())
