@@ -70,6 +70,18 @@
         this.todoList.removeChild(item);
     }
 
+    View.prototype.getItemObject = function(id){
+        var item = qs('[data-id="'+id+'"]');
+        let title = qs('label',item).innerText;
+        let completed = qs('.toggle',item).checked;
+        var obj = {
+            id: id,
+            title: title,
+            completed: completed
+        };
+        return obj;
+    }
+
     View.prototype.updateItem = function(updateItem){
         var id = updateItem.id;
         var item = qs('[data-id="'+id+'"]');
@@ -82,8 +94,21 @@
         this.newTodo.value = '';
     }
 
-    View.prototype.counter = function(counter){
-        if(counter == null || counter.total == 0){
+    View.prototype.counter = function(list){
+        list = list || [];
+        var counter = {};
+        counter.undone = 0;
+        counter.done = 0;
+        counter.total = list.length;
+        for(let i = 0;i < list.length; i++){
+            if(list[i].completed == false){
+                counter.undone ++;
+            }
+            else{
+                counter.done ++;
+            }
+        }
+        if(counter.total == 0){
             this.footer.style.display = 'none';
         }
         else{

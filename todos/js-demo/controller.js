@@ -11,10 +11,8 @@
         var self = this;
         self.model.read(function(data){
             self.view.showItems(data);
+            self.view.counter(data);
         });
-        self.model.counter(function(counter){
-            self.view.counter(counter);
-        })
     }
 
     Controller.prototype.showActive = function(){
@@ -41,14 +39,12 @@
         },filter);
     }
 
-    Controller.prototype.addItem = function(newItem){
+    Controller.prototype.addItem = function(title){
         var self = this;
-        self.model.add(newItem,function(item){
+        self.model.add(title,function(item,todos){
             self.view.addItem(item);
+            self.view.counter(todos);
         });
-        self.model.counter(function(counter){
-            self.view.counter(counter);
-        })
     }
 
     Controller.prototype.bind = function(){
@@ -65,12 +61,11 @@
             var target = event.target;
             var p = target.parentNode.parentNode;
             var id = p.getAttribute('data-id');
-            self.model.remove(id,function(id){
+            self.model.remove(id,function(id,todos){
                 self.view.removeItem(id);
+                self.view.counter(todos);
             });
-            self.model.counter(function(counter){
-                self.view.counter(counter);
-            })
+            
         });
 
         self.view.bindFilterAction(function(event){
@@ -92,14 +87,12 @@
             var target = event.target;
             var li = target.parentNode.parentNode;
             var id = li.getAttribute('data-id');
-            var item = self.model.findById(id);
-            item.completed = target.checked;
-            self.model.update(item,function(updateItem){
+            let item = self.view.getItemObject(id);
+            self.model.update(item,function(updateItem,todos){
                 self.view.updateItem(updateItem);
+                self.view.counter(todos);
             });
-            self.model.counter(function(counter){
-                self.view.counter(counter);
-            })
+        
         });
 
         self.view.bindToggleAllAction(function(event){
